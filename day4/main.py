@@ -1,25 +1,13 @@
-def main():
-    print(part_one())
+def criteria_match(password, group_size_match_func):
+    if len(password) != 6 or any(password[i] > password[i + 1] for i in range(5)):
+        return False
+    groups = [password.count(ch) for ch in set(password)]
+    return any(group_size_match_func(group) for group in groups)
 
 
-def part_one():
-    lower_bound = 353096
-    higher_bound = 843212
-    diff_password_count = 0
-    for potential_password in range(lower_bound, higher_bound):
-        has_double = False
-        is_increasing = True
-        previous_digit = -1
-        for digit in map(int, str(potential_password)):
-            if digit == previous_digit:
-                has_double = True
-            if digit < previous_digit:
-                is_increasing = False
-            previous_digit = digit
-        if is_increasing and has_double:
-            diff_password_count += 1
-    return diff_password_count
+pass_from, pass_to = 353096,843212
 
+part1 = sum(criteria_match(str(pass_num), lambda x: x >= 2) for pass_num in range(pass_from, pass_to + 1))
+part2 = sum(criteria_match(str(pass_num), lambda x: x == 2) for pass_num in range(pass_from, pass_to + 1))
 
-if __name__ == '__main__':
-    main()
+print('Part 1: {0}, Part 2: {1}'.format(part1, part2))
